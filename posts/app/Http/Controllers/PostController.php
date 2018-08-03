@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\postCreateRequest;
 class PostController extends Controller
 {
     /**
@@ -14,7 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts=Post::all();
+        $posts=Post::orderBy("id","desc")->get();
         return view("post.index",compact("posts"));
     }
 
@@ -25,7 +25,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view("post.create");
     }
 
     /**
@@ -34,9 +34,16 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(postCreateRequest $request)
     {
-        //
+        /*$post=new Post();
+        $post->titulo=$request->get('titulo');
+        $post->descripcion=$request->get('descripcion');
+        $post->url=$request->get('url');
+        $post->save();*/
+        
+        $post=Post::create($request->only("titulo","descripcion","url"));
+    return redirect()->route("post.index");
     }
 
     /**
@@ -47,7 +54,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view("post.show",compact("post"));
     }
 
     /**
